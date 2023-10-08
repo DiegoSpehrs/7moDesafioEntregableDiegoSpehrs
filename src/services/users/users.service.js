@@ -1,30 +1,29 @@
-import {usersModel} from '../../DAOS/managers/users.manager.js';
+import {usersMongo} from '../../DAL/DAOs/MongoDAOs/usersMongo.dao.js';
+import { hashData } from '../../utils.js';
 
-class UsersMongo{
+class UsersService{
     async createUser(user){
-        const filterAdmin = "adminCoder@coder.com"
-        try {
-            if(filterAdmin === user.email){
-                user.isAdmin = true;
-                const newUser = await usersModel.create(user)
-                return newUser
-            }else{
-                const newUser = await usersModel.create(user)
-                return newUser
-            }
-        } catch (error) {
-            return error
+        const filterAdmin = "adminCoder@coder.com";
+        const {first_name,last_name,username,password} = user;
+        const userDB = await usersMongo.findOne(username);
+        if(!first_name || !last_name || !username || !password) throw new Error('Some required data is missing');
+        if(userDB) throw new Error('user already exists');
+        const hasPassword = await hashData(password);
+        if(filterAdmin === user.email) {
+            user.isAdmin = true;
+            const newUser = await usersMongo.createOne(user, {password:hasPassword});
+            return newUser;
+        }else{
+            newUser = await usersMongo.createOne(user,{password:hasPassword});
+            return newUser;
         }
     }
 
     async findUser(username){
-        try {
-            const user = await usersModel.findOne({username})
-            return user
-        } catch (error) {
-            return error
-        }
+       const user = await usersMongo.findOne({username});
+       if(!user) throw new Error('User not found')
+       return user;
     }
 }
 
-export const userMongo = new UsersMongo();
+export const userService = new UsersService();

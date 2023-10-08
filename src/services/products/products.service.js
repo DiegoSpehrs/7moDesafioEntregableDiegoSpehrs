@@ -1,66 +1,52 @@
-import {productsModel} from '../../DAOS/managers/products.manager.js';
+import {productsMongo} from '../../DAL/DAOs/MongoDAOs/productsMongo.dao.js';
 
-class ProductsMongo{
+class ProductsService{
     async getPorducts(obj){
-        const {limit=10,page=1,...query} = obj
-        try {
-            const result = await productsModel.paginate(
-                query,
-                {limit,page}
-            )
-
-            const info = {
-             payload: result.docs,
-             totalPages: result.totalPages,
-             prevPage: result.prevPage,
-             nextPage: result.nextPage,
-             page: result.page,
-             hasPrevPage: result.hasPrevPage,
-             hasNextPage: result.hasNextPage,
-             prevLink: `http://localhost:8080/api/products?page=${result.prevPage}`,
-             nextLink: `http://localhost:8080/api/products?page=${result.nextPage}`   
-            }
-            return {info}
-        } catch (error) {
-            return error
-        }
+      const {limit=10 ,page=1 ,...query} = obj;
+      const result = await productsMongo.paginate(
+        query,
+        {limit ,page}
+      );
+      const info = {
+        payload: result.docs,
+        totalPages: result.totalPages,
+        prevPage: result.prevPage,
+        nextPage: result.nextPage,
+        page: result.page,
+        hasPrevPage: result.hasPrevPage,
+        hasNextPage: result.hasNextPage,
+        prevLink: `http://localhost:8080/api/products?page=${result.prevPage}`,
+        nextLink: `http://localhost:8080/api/products?page=${result.nextPage}`
+      };
+      return {info};
     }
 
     async addProduct(obj){
-        try {
-            const newProduct = await productsModel.create(obj)
-            return newProduct
-        } catch (error) {
-            return error
-        }
+      const {title, description, price, thumbnail, category, code, sotck, quantity} = obj;
+      if(!title || !description || !price || !thumbnail || !category || !code || !sotck || !quantity) throw new Error ('some data required is missing');
+      const newProduct = await productsMongo.createOne(obj);
+      return newProduct;
     }
 
     async getProductById(pid){
-        try {
-            const product = await productsModel.findById(pid)
-            return product
-        } catch (error) {
-            return error
-        }
+        const product = await productsMongo.findById(pid);
+        if(!product) throw new Error('Product not found');
+        return product;
     }
 
     async updateProduct (pid,obj){
-        try {
-            const response = await productsModel.updateOne({_id:pid},{...obj})
-            return response
-        } catch (error) {
-            return error
-        }
+        const product = await productsMongo.findById(pid);
+        if(!product) throw new Error('Product not found');
+        const response = await productsMongo.updateOne({_id:pid},{...obj});
+        return response;
     }
 
     async deleteProduct(pid){
-        try {
-            const response = await productsModel.findByIdAndDelete(pid)
-            return response
-        } catch (error) {
-            return error
-        }
+      const product = await productsMongo.findById(pid);
+      if(!product) throw new Error('Product not found'); 
+      const response = await productsMongo.deleteOne(pid);
+       return response;
     }
 }
 
-export const productMongo = new ProductsMongo()
+export const productsService = new ProductsService()
