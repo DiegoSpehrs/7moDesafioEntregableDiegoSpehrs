@@ -1,11 +1,17 @@
 import { Router } from "express";
-//importar funciones desde controllers
+import { usersController } from "../controllers/users/users.controller.js";
+import passport from "passport";
 
 const router = Router();
 
-router.post('/singup', localSingup)
+router.post('/singup', usersController.singupUser);
 
-//crear ruta de la estrategia de passport-gitHub
+router.get('/githubSignup',passport.authenticate('github',{scope: ['user:email']}));
+
+router.get('/github',passport.authenticate('github',{failureRedirect:'/api/views/singup'}),(req,res)=>{
+    req.session['username'] = req.user.username
+    res.redirect('/api/home')
+});
 
 
 export default router

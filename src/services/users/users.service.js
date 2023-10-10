@@ -1,5 +1,5 @@
 import {usersMongo} from '../../DAL/DAOs/MongoDAOs/usersMongo.dao.js';
-import { hashData } from '../../utils.js';
+import { hashData, compareData } from '../../utils.js';
 
 class UsersService{
     async createUser(user){
@@ -23,6 +23,14 @@ class UsersService{
        const user = await usersMongo.findOne({username});
        if(!user) throw new Error('User not found')
        return user;
+    }
+
+    async findUserLogin(username, password){
+        if(!user || !password) throw new Error('Sing up first');
+        const userDB = await usersMongo.findOne({username});
+        const isPasswordValid = await compareData(password, userDB.password);
+        if(!isPasswordValid) throw new Error('Username or Password not valid');
+        return userDB
     }
 }
 

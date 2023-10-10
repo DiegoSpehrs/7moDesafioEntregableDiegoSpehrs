@@ -8,13 +8,14 @@ import loginRouter from './routes/login.router.js';
 import usersRouter from './routes/users.router.js';
 import homeRouter from './routes/home.router.js';
 import { Server } from 'socket.io';
-import { productMongo } from './services/products/products.service.js';
-import './db/dbConfig.js';
+import { productsService } from './services/products/products.service.js';
+import './DAL/mongoDB/dbConfig.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import mongoStore from 'connect-mongo';
 import passport from 'passport';
-import './passport/passportStrategies.js'
+import './routes/passport/passportStrategies.js';
+import config from './config.js';
 
 
 const app = express()
@@ -48,7 +49,7 @@ app.use('/api/login',loginRouter)
 app.use('/api/users',usersRouter)
 app.use('/api/home',homeRouter)
 
-const PORT = 8080
+const PORT = config.port;
 
 const httpServer = app.listen(PORT,()=>{
     console.log(`Escuchando al puerto ${PORT}`)
@@ -61,7 +62,7 @@ socketServer.on('connection',(socket)=>{
     
     socket.on('addProduct',async(newProduct)=>{ 
         try{
-            const addProduct = await productMongo.addproduct(
+            const addProduct = await productsService.addproduct(
                 newProduct.title,
                 newProduct.description,
                 newProduct.price,
@@ -78,7 +79,7 @@ socketServer.on('connection',(socket)=>{
 
     socket.on('deletPorduct',async(idProduct)=>{
         try{
-            const producDeleted = await productMongo.deleteProduct(idProduct)
+            const producDeleted = await productsService.deleteProduct(idProduct)
             socketServer.emit("deleteProductSuccess", producDeleted);
         }catch(error){
             socket.emit('errorDeletedProd',"error al eliminar el producto")

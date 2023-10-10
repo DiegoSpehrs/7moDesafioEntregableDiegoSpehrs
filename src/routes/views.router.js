@@ -1,17 +1,18 @@
 import { Router } from "express";
+import { viewsController } from "../controllers/views/views.controller.js";
 
 const router = Router();
 
-router.get('/', renderBodyHome)
+router.get('/', viewsController.homeRender);
 
-router.get('/realtimeproducts', renderRealTimeProducts)
+router.get('/realtimeproducts', viewsController.realTimeRender);
 
-router.get('/login', renderLogin)
+router.get('/login', viewsController.loginRender);
 
-router.get('/singup', renderSingup)
+router.get('/singup', viewsController.singupRender);
 
-router.get('/adminHome', renderAdminHome)
+router.get('/adminHome', viewsController.adminHomeRender);
 
-router.get('/clientHome', renderClientHome)
+router.get('/clientHome', viewsController.clientHomeRender);
 
 export default router

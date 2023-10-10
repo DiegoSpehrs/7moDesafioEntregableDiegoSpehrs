@@ -2,7 +2,7 @@ import {productsMongo} from '../../DAL/DAOs/MongoDAOs/productsMongo.dao.js';
 
 class ProductsService{
     async getPorducts(obj){
-      const {limit=10 ,page=1 ,...query} = obj;
+      const {limit=10 ,page=1 ,} = obj;
       const result = await productsMongo.paginate(
         query,
         {limit ,page}

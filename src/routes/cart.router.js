@@ -1,18 +1,19 @@
 import { Router } from "express";
-//falta importar las funciones del controller
+import { cartsController } from "../controllers/carts/carts.controller.js";
 
-const router = Router()
 
-router.post('/', CreateCart)
+const router = Router();
 
-router.post('/:cid', addProduct)
+router.post('/', cartsController.createcart);
 
-router.delete('/:cid/products/:pid', productDelete)
+router.post('/:cid/products/:pid', cartsController.addProduct);
 
-router.put('/:cid', getCartById)
+router.delete('/:cid/products/:pid', cartsController.productDelete);
 
-router.put('/:cid/products/:pid', updateProduct)
+router.put('/:cid', cartsController.getCart);
 
-router.delete('/:cid', cartDeleted)
+router.put('/:cid/products/:pid', cartsController.updateProduct);
+
+router.delete('/:cid', cartsController.cartDelete);
 
 export default router
