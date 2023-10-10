@@ -1,12 +1,14 @@
+import { query } from 'express';
 import {productsMongo} from '../../DAL/DAOs/MongoDAOs/productsMongo.dao.js';
 
 class ProductsService{
     async getPorducts(obj){
-      const {limit=10 ,page=1 ,} = obj;
-      const result = await productsMongo.paginate(
+      const {limit=10 ,page=1, ...query } = obj;
+      const result = await productsMongo.model.paginate(
         query,
         {limit ,page}
       );
+      console.log(result);
       const info = {
         payload: result.docs,
         totalPages: result.totalPages,

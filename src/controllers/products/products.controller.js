@@ -2,9 +2,8 @@ import {productsService} from '../../services/products/products.service.js';
 
 class ProductsController {
     async getAllProducts(req,res) {
-      const {limit, page} = req.params;
       try {
-        const products = await productsService.getPorducts({limit, page,}); 
+        const products = await productsService.getPorducts(req.query); 
         res.status(200).json({products});
       } catch (error) {
         res.status(500).json({error});

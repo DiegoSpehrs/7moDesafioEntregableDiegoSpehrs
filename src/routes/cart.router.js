@@ -6,13 +6,13 @@ const router = Router();
 
 router.post('/', cartsController.createcart);
 
-router.post('/:cid/products/:pid', cartsController.addProduct);//no funca
+router.post('/:cid/products/:pid', cartsController.addProduct);
 
 router.delete('/:cid/products/:pid', cartsController.productDelete);
 
-router.put('/:cid', cartsController.getCart);//no funca
+router.put('/:cid', cartsController.getCart);
 
-router.put('/:cid/products/:pid', cartsController.updateProduct);//no funca
+router.put('/:cid/products/:pid', cartsController.updateProduct);
 
 router.delete('/:cid', cartsController.cartDelete);
 
