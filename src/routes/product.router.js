@@ -3,7 +3,7 @@ import { productsController } from "../controllers/products/products.controller.
 
 const router = Router();
 
-router.get('/', productsController.getAllProducts);
+router.get('/', productsController.getAllProducts);// no funca
 
 router.get('/:pid', productsController.getProductById);
 
