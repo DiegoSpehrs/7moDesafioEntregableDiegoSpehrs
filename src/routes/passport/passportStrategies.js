@@ -30,10 +30,10 @@ passport.use(new GithubStrategy({
 },
     async function (accessToken, refreshToken, profile, done) {
         try {
-            const userDb = await userService.findUser(profile.username)
-            if (userDb) {
-                return done(null, false)
-            }
+            //const userDb = await userService.findUser(profile.username)
+            //if (userDb) {
+            //    return done(null, false)
+            //}
             const newUser = {
                 first_name: profile.displayName.split(' ')[0],
                 last_name: profile.displayName.split(' ')[1],
